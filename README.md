@@ -43,6 +43,7 @@ It:
 
 ## ▶️ How to run
 
+### 1. Clone the repository
 ```bash
-pip install -r requirements.txt
-python main.py
+git clone https://github.com/venom312004/AI-video-assistant.git
+cd ai-video-assistant
