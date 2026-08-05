@@ -31,7 +31,7 @@ huggingface-hub>=0.23.0           # Model downloading from HuggingFace Hub
 tiktoken>=0.7.0                   # Token counting for text splitting
 
 # ── Streamlit UI ──────────────────────────────────────────────────────────────
-streamlit>=1.38.0
+streamlit==1.38.0
 streamlit-extras>=0.4.0           # Additional Streamlit widgets / utilities
 watchdog>=4.0.0                   # File-change watcher (improves Streamlit hot-reload)
 blinker>=1.7.0
@@ -43,7 +43,7 @@ reportlab>=4.2.0                  # PDF generation
 fpdf2>=2.7.9                      # Lightweight alternative PDF library
 
 # ── Utilities ─────────────────────────────────────────────────────────────────
-python-dotenv>=1.0.0              # Load API keys from .env
+python-dotenv==1.0.0           # Load API keys from .env
 numpy>=1.26.0
 tqdm>=4.66.0                      # Progress bars
 requests>=2.32.0
