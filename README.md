@@ -43,7 +43,17 @@ It:
 
 ## ▶️ How to run
 
-### 1. Clone the repository
 ```bash
+# 1. Clone the repository
 git clone https://github.com/venom312004/AI-video-assistant.git
 cd ai-video-assistant
+
+# 2. Create virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate   # On Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Run the application
+python app.py
