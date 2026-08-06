@@ -13,7 +13,7 @@ def download_youtube_audio(url: str) -> str:
         "outtmpl": output_path,
         "extractor_args": {
             "youtube": {
-                "player_client": ["android", "web", "ios"]
+                "player_client": ["tv", "web"]
             }
         },
         "http_headers": {
