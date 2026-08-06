@@ -13,12 +13,6 @@ AI Video Assistant is an end-to-end meeting/video intelligence tool. Upload an a
 
 ---
 
-## 🏷️ Tags
-
-`python` `streamlit` `langchain` `mistral-ai` `whisper` `sarvam-ai` `rag` `chromadb` `speech-to-text` `nlp` `ai-assistant` `meeting-summarizer` `hinglish`
-
----
-
 ## 📌 Description
 
 This project combines a dual transcription engine (OpenAI Whisper for English, Sarvam AI for Hinglish), a LangChain + Mistral-powered summarization and extraction pipeline, and a ChromaDB-backed RAG chat system — all wrapped in a custom-styled Streamlit interface.
