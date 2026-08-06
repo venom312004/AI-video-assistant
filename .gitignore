@@ -8,4 +8,3 @@ __pycache__/
 downloads/
 .streamlit/secrets.toml
 vector_db/
-cookies.txt
