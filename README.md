@@ -8,7 +8,7 @@ AI Video Assistant is an end-to-end meeting/video intelligence tool. Upload an a
 
 ## 🔗 Links
 
-- **Live App:** [ai-video-assistant-pranjal-pandey.streamlit.app](https://ai-video-assistant-pranjal-pandey.streamlit.app)
+- **Live App:** [ai-video-assistant-pranjal-pandey.streamlit.app](https://ai-video-assistant-pranjal-pandey-0301.streamlit.app/)
 
 
 ---
