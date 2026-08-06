@@ -8,6 +8,15 @@ from core.extractor import extract_action_items, extract_key_decisions, extract_
 from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
+def ensure_cookies_file():
+    cookies_path = "cookies.txt"
+    if not os.path.exists(cookies_path):
+        cookies_content = st.secrets["YOUTUBE_COOKIES"]
+        with open(cookies_path, "w") as f:
+            f.write(cookies_content)
+    return cookies_path
+
+ensure_cookies_file()
 
 # ─── Page Config ────────────────────────────────────────────────────────────────
 st.set_page_config(
