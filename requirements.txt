@@ -60,5 +60,3 @@ pyarrow>=7.0,<25                  # Required by streamlit
 python-multipart>=0.0.10          # Required by streamlit
 plotly>=5.23.0                    # Required by streamlit-extras
 gitdb>=4.0.1,<5                   # Required by gitpython
-langgraph>=1.2.5,<1.3.0           # Required by langchain
-langgraph-checkpoint>=2.1.0,<5.0.0 # Required by langgraph-prebuilt
