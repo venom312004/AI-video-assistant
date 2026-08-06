@@ -1,21 +1,21 @@
-# ── AI Meeting Assistant ── requirements.txt ──────────────────────────────────
+#  AI Meeting Assistant  requirements.txt 
 # Python >= 3.10 recommended
 --extra-index-url https://download.pytorch.org/whl/cpu
 
-# ── Audio / Video acquisition ─────────────────────────────────────────────────
+#  Audio / Video acquisition 
 yt-dlp>=2024.4.9                  # Download audio from YouTube URLs
 pydub>=0.25.1                     # Audio file manipulation / format conversion
 ffmpeg-python>=0.2.0              # FFmpeg bindings (FFmpeg binary must be installed separately)
 
-# ── Speech-to-Text (local Whisper) ────────────────────────────────────────────
+# Speech-to-Text (local Whisper) 
 openai-whisper>=20231117          # OpenAI Whisper (runs locally)
 torch>=2.2.0                      # PyTorch backend for Whisper
 torchaudio>=2.2.0                 # Audio utilities for PyTorch
 
-# ── Translation (Hindi → English) ─────────────────────────────────────────────
+#  Translation (Hindi → English)
 deep-translator>=1.11.4           # Lightweight translation wrapper (Google backend)
 
-# ── LLM Orchestration — LangChain LCEL + Mistral ──────────────────────────────
+#  LLM Orchestration — LangChain LCEL + Mistral 
 langchain>=0.2.0
 langchain-core>=0.2.0
 langchain-community>=0.2.0
@@ -23,7 +23,7 @@ langchain-mistralai>=0.1.0        # LangChain wrapper for Mistral API
 mistralai>=0.4.0                  # Official Mistral Python client
 langchain-text-splitters>=1.1.2
 
-# ── RAG Pipeline ──────────────────────────────────────────────────────────────
+# RAG Pipeline 
 chromadb>=0.5.0                   # Local vector store
 transformers>=4.40.0
 sentence-transformers>=3.0.0      # HuggingFace embedding models
@@ -31,7 +31,7 @@ langchain-huggingface>=0.0.3      # LangChain ↔ HuggingFace embeddings bridge
 huggingface-hub>=0.23.0           # Model downloading from HuggingFace Hub
 tiktoken>=0.7.0                   # Token counting for text splitting
 
-# ── Streamlit UI ──────────────────────────────────────────────────────────────
+# Streamlit UI 
 streamlit==1.38.0
 streamlit-extras>=0.4.0           # Additional Streamlit widgets / utilities
 watchdog>=4.0.0                   # File-change watcher (improves Streamlit hot-reload)
@@ -39,17 +39,17 @@ blinker>=1.7.0
 toml>=0.10.2
 itsdangerous>=2.1.0
 
-# ── PDF & TXT Export ──────────────────────────────────────────────────────────
+# PDF & TXT Export 
 reportlab>=4.2.0                  # PDF generation
 fpdf2>=2.7.9                      # Lightweight alternative PDF library
 
-# ── Utilities ─────────────────────────────────────────────────────────────────
+#  Utilities
 python-dotenv==1.0.0           # Load API keys from .env
 numpy>=1.26.0
 tqdm>=4.66.0                      # Progress bars
 requests>=2.32.0
 
-# ── Dependency fixes (resolve uv pip check conflicts) ──────────────────────────
+# Dependency fixes (resolve uv pip check conflicts)
 pillow>=9.0.0,<13                 # Required by streamlit, reportlab, fpdf2
 pandas>=1.4.0,<4                  # Required by streamlit
 altair>=4.0,!=5.4.0,!=5.4.1,<7    # Required by streamlit
