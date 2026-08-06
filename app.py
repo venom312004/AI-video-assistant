@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import os                          
 from dotenv import load_dotenv
 from utils.audio_processor import process_input
 from core.transcriber import transcribe_all
@@ -8,6 +9,7 @@ from core.extractor import extract_action_items, extract_key_decisions, extract_
 from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
+
 def ensure_cookies_file():
     cookies_path = "cookies.txt"
     if not os.path.exists(cookies_path):
