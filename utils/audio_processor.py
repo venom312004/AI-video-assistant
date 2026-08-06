@@ -1,6 +1,13 @@
 import yt_dlp
 from pydub import AudioSegment
 import os
+import shutil
+ffmpeg_path = shutil.which("ffmpeg")
+if ffmpeg_path:
+    AudioSegment.converter = ffmpeg_path
+    AudioSegment.ffprobe = shutil.which("ffprobe")
+else:
+    raise RuntimeError("ffmpeg not found in PATH")
 
 DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
