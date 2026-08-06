@@ -2,7 +2,7 @@
 
 **Meeting Intelligence — Transcribe · Summarise · Chat with your meetings**
 
-AI Video Assistant is an end-to-end meeting/video intelligence tool. Upload an audio/video file (or a YouTube link), and it automatically transcribes it (English or Hinglish), generates a summary, extracts action items, key decisions, and open questions, and lets you chat with the transcript using a RAG-powered assistant.
+AI Video Assistant is an end-to-end meeting/video intelligence tool. Upload an audio/video file  and it automatically transcribes it (English or Hinglish), generates a summary, extracts action items, key decisions, and open questions, and lets you chat with the transcript using a RAG-powered assistant.
 
 ---
 
