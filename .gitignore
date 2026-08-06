@@ -1,7 +1,11 @@
+.venv/
 __pycache__/
 *.pyc
 .env
-downloads/
+*.mp3
+*.mp4
 *.wav
+downloads/
+.streamlit/secrets.toml
 vector_db/
-.DS_Store
+cookies.txt
