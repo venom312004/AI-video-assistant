@@ -1,6 +1,7 @@
 import streamlit as st
 import time
-import os                          
+import os  
+import base64                        
 from dotenv import load_dotenv
 from utils.audio_processor import process_input
 from core.transcriber import transcribe_all
@@ -10,15 +11,21 @@ from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
 
+
+
 def ensure_cookies_file():
     cookies_path = "cookies.txt"
     if not os.path.exists(cookies_path):
-        cookies_content = st.secrets["YOUTUBE_COOKIES"]
-        with open(cookies_path, "w") as f:
-            f.write(cookies_content)
+        cookie_b64 = st.secrets.get("YOUTUBE_COOKIES_B64")
+        if cookie_b64:
+            cookies_content = base64.b64decode(cookie_b64).decode()
+            with open(cookies_path, "w") as f:
+                f.write(cookies_content)
     return cookies_path
 
 ensure_cookies_file()
+
+
 
 # ─── Page Config ────────────────────────────────────────────────────────────────
 st.set_page_config(
