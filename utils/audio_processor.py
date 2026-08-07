@@ -26,7 +26,7 @@ def download_youtube_audio(url: str) -> str:
     output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
     ydl_opts = {
         "format": "bestaudio/best",
-        "cookiefile": "cookies.txt",
+        "cookiefile": get_cookies_file(),
         "outtmpl": output_path,
         "extractor_args": {
             "youtube": {
