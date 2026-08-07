@@ -1,6 +1,7 @@
 import yt_dlp
 from pydub import AudioSegment
 import os
+import base64
 import shutil
 ffmpeg_path = shutil.which("ffmpeg")
 if ffmpeg_path:
@@ -11,6 +12,15 @@ else:
 
 DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
+def get_cookies_file():
+    cookie_b64 = os.environ.get("YOUTUBE_COOKIES_B64")
+    if cookie_b64:
+        cookie_content = base64.b64decode(cookie_b64).decode()
+        with open("cookies_temp.txt", "w") as f:
+            f.write(cookie_content)
+        return "cookies_temp.txt"
+    return "cookies.txt"
 
 def download_youtube_audio(url: str) -> str:
     output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
