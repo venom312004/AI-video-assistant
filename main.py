@@ -2,35 +2,36 @@ from dotenv import load_dotenv
 load_dotenv()
 from utils.audio_processor import process_input
 from core.transcriber import transcribe_all
-from core.summary import summarize,generate_title
-from core.extractor import extract_action_items,extract_key_decisions,extract_questions
-from core.rag_engine import build_rag_chain,ask_question
+from core.summary import summarize, generate_title
+from core.extractor import extract_all
+from core.rag_engine import build_rag_chain, ask_question
 
-def run_pipeline(source:str,language:str="english")->dict:
+def run_pipeline(source: str, language: str = "english") -> dict:
     print("starting AI video assistant")
-    
-    chunks=process_input(source)
-    transcript=transcribe_all(chunks,language=language)
+
+    chunks = process_input(source)
+    transcript = transcribe_all(chunks, language=language)
     print(f"raw transcription (first 300 characters : {transcript[:300]})")
-    
-    title=generate_title(transcript)
-    summary=summarize(transcript)
-    action_item=extract_action_items(transcript)
-    decision=extract_key_decisions(transcript)
-    questions=extract_questions(transcript)
-    
-    rag_chain=build_rag_chain(transcript)
+
+    title = generate_title(transcript)
+    summary = summarize(transcript)
+
+    extracted = extract_all(transcript)
+    action_item = extracted["action_items"]
+    decision = extracted["key_decisions"]
+    questions = extracted["open_questions"]
+
+    rag_chain = build_rag_chain(transcript)
     return {
-        "title":title,
-        "transcript":transcript,
-        "summary":summary,
-        "action_items":action_item,
-        "key_decision":decision,
-        "open_question":questions,
-        "rag_chain":rag_chain
-        
+        "title": title,
+        "transcript": transcript,
+        "summary": summary,
+        "action_items": action_item,
+        "key_decision": decision,
+        "open_question": questions,
+        "rag_chain": rag_chain
     }
-    
+
 if __name__ == "__main__":
     # CLI entry point
     source = input("Enter YouTube URL or local file path: ").strip()
@@ -57,6 +58,3 @@ if __name__ == "__main__":
             continue
         answer = ask_question(rag_chain, question)
         print(f"\n🤖 Assistant: {answer}\n")
-    
-
-        
