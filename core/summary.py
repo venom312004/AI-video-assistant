@@ -44,8 +44,8 @@ def is_retryable_error(exception):
 
 @retry(
     retry=retry_if_exception(is_retryable_error),
-    wait=wait_exponential(multiplier=2, min=3, max=30),
-    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=2, min=3, max=60),
+    stop=stop_after_attempt(8),
     reraise=True,
 )
 def safe_invoke(chain, payload):
