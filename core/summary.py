@@ -90,7 +90,7 @@ def summarize(transcript: str) -> str:
         summary = safe_invoke(map_chain, {"text": chunk})
         chunk_summaries.append(summary)
         if i < len(chunks) - 1:
-            time.sleep(2)
+            time.sleep(3)
 
     combined = "\n\n".join(chunk_summaries)
 
@@ -101,7 +101,7 @@ def summarize(transcript: str) -> str:
     ])
     combined_chain = RunnablePassthrough() | RunnableLambda(lambda x: {"text": x}) | combined_prompt | llm | StrOutputParser()
 
-    time.sleep(2)
+    time.sleep(3)
     return safe_invoke(combined_chain, combined)
 
 
@@ -114,5 +114,5 @@ def generate_title(transcript: str) -> str:
     ])
     title_chain = RunnablePassthrough() | RunnableLambda(lambda x: {"text": x}) | title_prompt | llm | StrOutputParser()
 
-    time.sleep(2)
+    time.sleep(3)
     return safe_invoke(title_chain, transcript[:2000])
