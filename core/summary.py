@@ -1,4 +1,4 @@
-from langchain_mistralai import ChatMistralAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -16,9 +16,9 @@ import os
 
 
 def get_llm():
-    return ChatMistralAI(
-        model="mistral-small-latest",
-        mistral_api_key=os.getenv("MISTRAL_API_KEY"),
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
         temperature=0.3,
         max_retries=0,
         timeout=60,
@@ -36,7 +36,7 @@ def is_retryable_error(exception):
         return True
 
     error_text = str(exception).lower()
-    if "429" in error_text or "rate limit" in error_text:
+    if "429" in error_text or "rate limit" in error_text or "resource_exhausted" in error_text:
         return True
 
     return False
@@ -53,7 +53,7 @@ def safe_invoke(chain, payload):
         return chain.invoke(payload)
     except Exception as e:
         print("=" * 60)
-        print("MISTRAL API ERROR")
+        print("GEMINI API ERROR")
         print("Exception type:", type(e).__name__)
         print("Error:", str(e))
         status_code = getattr(e, "status_code", None)

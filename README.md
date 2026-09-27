@@ -15,7 +15,7 @@ AI Video Assistant is an end-to-end meeting/video intelligence tool. Upload an a
 
 ## 📌 Description
 
-This project combines a dual transcription engine (OpenAI Whisper for English, Sarvam AI for Hinglish), a LangChain + Mistral-powered summarization and extraction pipeline, and a ChromaDB-backed RAG chat system — all wrapped in a custom-styled Streamlit interface.
+This project combines a dual transcription engine (OpenAI Whisper for English, Sarvam AI for Hinglish), a LangChain + Gemini-powered summarization and extraction pipeline, and a ChromaDB-backed RAG chat system — all wrapped in a custom-styled Streamlit interface.
 
 It's built for anyone who wants to turn a raw meeting recording, podcast, or video into a structured, searchable, and conversational summary.
 
@@ -24,12 +24,13 @@ It's built for anyone who wants to turn a raw meeting recording, podcast, or vid
 ## ✨ Features
 
 - 🎙️ **Dual Transcription Engine** — OpenAI Whisper (English) and Sarvam AI (Hinglish)
-- 📋 **Auto-Summarization** — concise meeting/video summaries via Mistral AI
+- 📋 **Auto-Summarization** — concise meeting/video summaries via Google Gemini
 - ✅ **Action Item Extraction** — tasks, owners, and deadlines pulled automatically
 - 🔑 **Key Decision & Open Question Detection**
 - 💬 **RAG Chat** — ask follow-up questions grounded in the transcript
 - 📁 **Flexible Input** — upload audio/video files directly (`.mp3`, `.wav`, `.mp4`, `.m4a`, `.webm`)
 - 🎨 **Custom dark-themed UI** built with Streamlit
+- 🔁 **Automatic retry with exponential backoff** on LLM API rate limits / transient errors
 
 > **Note:** Direct YouTube link processing is unreliable on cloud hosting (Streamlit Cloud / Render free tier) due to YouTube's bot-detection blocking data-center IPs. **File upload is the recommended and fully supported input method.**
 
@@ -41,7 +42,7 @@ It's built for anyone who wants to turn a raw meeting recording, podcast, or vid
 |---|---|
 | Frontend | Streamlit |
 | LLM Orchestration | LangChain (LCEL) |
-| LLM Provider | Mistral AI (`mistral-small-latest`) |
+| LLM Provider | Google Gemini (`gemini-2.0-flash`) |
 | Speech-to-Text | OpenAI Whisper, Sarvam AI |
 | Vector Store | ChromaDB (`langchain-chroma`) |
 | Embeddings | HuggingFace / Sentence-Transformers |
@@ -53,9 +54,9 @@ It's built for anyone who wants to turn a raw meeting recording, podcast, or vid
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python ≥ 3.10
+- **Python 3.10, 3.11, or 3.12** (Python 3.13+ is not recommended — several dependencies like `torch`, `pillow`, and `chromadb` don't yet ship prebuilt Windows wheels for the newest Python releases, which can cause install failures)
 - `ffmpeg` installed on your system
-- Mistral AI API key
+- Google Gemini API key
 - Sarvam AI API key
 
 ### Installation
@@ -64,13 +65,13 @@ It's built for anyone who wants to turn a raw meeting recording, podcast, or vid
 git clone https://github.com/venom312004/AI-video-assistant.git
 cd AI-video-assistant
 
-# create and activate a virtual environment
-uv venv
+# create and activate a virtual environment (use Python 3.11 or 3.12)
+py -3.11 -m venv venv
 .venv\Scripts\activate     # Windows
 # source .venv/bin/activate  # macOS/Linux
 
 # install dependencies
-uv pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Environment Variables
@@ -78,7 +79,7 @@ uv pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-MISTRAL_API_KEY=your_mistral_api_key
+GOOGLE_API_KEY=your_google_gemini_api_key
 SARVAM_API_KEY=your_sarvam_api_key
 ```
 
@@ -115,6 +116,7 @@ AI video Assistant/
 
 - **YouTube URL input** may fail on cloud deployments with `HTTP 403` or `format not available` errors due to YouTube's bot-detection on data-center IPs. Use the **file upload** option for reliable results.
 - Free-tier cloud hosting has limited CPU/RAM, so large files or long videos may take longer to process or hit resource throttling.
+- **Python version:** Avoid the newest Python releases (3.13+) until upstream libraries publish prebuilt wheels for them — otherwise `pip install` may attempt to build packages like Pillow from source and fail.
 
 ---
 
@@ -128,6 +130,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - [OpenAI Whisper](https://github.com/openai/whisper)
 - [Sarvam AI](https://www.sarvam.ai/)
-- [Mistral AI](https://mistral.ai/)
+- [Google Gemini](https://ai.google.dev/)
 - [LangChain](https://www.langchain.com/)
 - [Streamlit](https://streamlit.io/)

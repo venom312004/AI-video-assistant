@@ -1,22 +1,34 @@
-# Actionable items, decisions, questions — combined into ONE Mistral call
+# Actionable items, decisions, questions — combined into ONE Gemini call
 
-from langchain_mistralai import ChatMistralAI
+import os
+import re
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
-from tenacity import retry, wait_exponential, stop_after_attempt
-import os
-import re
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception
 
 
 def get_llm():
-    return ChatMistralAI(
-        model="mistral-small-latest",
-        mistral_api_key=os.getenv("MISTRAL_API_KEY"),
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash",
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
         temperature=0.2,
-        max_retries=6,
+        max_retries=0,
         timeout=60,
     )
+
+
+def is_retryable_error(exception):
+    status_code = getattr(exception, "status_code", None)
+    if status_code is None:
+        response = getattr(exception, "response", None)
+        if response is not None:
+            status_code = getattr(response, "status_code", None)
+    if status_code in {429, 500, 502, 503, 504}:
+        return True
+    error_text = str(exception).lower()
+    return "429" in error_text or "rate limit" in error_text or "resource_exhausted" in error_text
 
 
 def build_chain(system_prompt: str):
@@ -30,9 +42,28 @@ def build_chain(system_prompt: str):
     )
 
 
-@retry(wait=wait_exponential(multiplier=2, min=2, max=30), stop=stop_after_attempt(5))
+@retry(
+    retry=retry_if_exception(is_retryable_error),
+    wait=wait_exponential(multiplier=2, min=3, max=30),
+    stop=stop_after_attempt(5),
+    reraise=True,
+)
 def safe_invoke(chain, payload):
-    return chain.invoke(payload)
+    try:
+        return chain.invoke(payload)
+    except Exception as e:
+        print("=" * 60)
+        print("GEMINI API ERROR (EXTRACTOR)")
+        print("Exception type:", type(e).__name__)
+        print("Error:", str(e))
+        status_code = getattr(e, "status_code", None)
+        if status_code is None:
+            response = getattr(e, "response", None)
+            if response is not None:
+                status_code = getattr(response, "status_code", None)
+        print("HTTP status:", status_code)
+        print("=" * 60)
+        raise
 
 
 COMBINED_SYSTEM_PROMPT = """You are an expert meeting analyst. From the meeting transcript, extract all three of the following. Use EXACTLY these section headers so the output can be parsed:
@@ -50,7 +81,7 @@ Do not add any other text outside these three sections."""
 
 
 def extract_all(transcript: str) -> dict:
-    """Single Mistral call that returns action items, decisions, and questions together."""
+    """Single Gemini call that returns action items, decisions, and questions together."""
     chain = build_chain(COMBINED_SYSTEM_PROMPT)
     raw = safe_invoke(chain, transcript)
 
