@@ -42,7 +42,7 @@ It's built for anyone who wants to turn a raw meeting recording, podcast, or vid
 |---|---|
 | Frontend | Streamlit |
 | LLM Orchestration | LangChain (LCEL) |
-| LLM Provider | Google Gemini (`gemini-2.0-flash`) |
+| LLM Provider | Google Gemini (`gemini-3.8-flash`) |
 | Speech-to-Text | OpenAI Whisper, Sarvam AI |
 | Vector Store | ChromaDB (`langchain-chroma`) |
 | Embeddings | HuggingFace / Sentence-Transformers |
