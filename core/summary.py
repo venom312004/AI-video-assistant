@@ -15,7 +15,7 @@ from tenacity import (
     retry_if_exception,
 )
 
-MODEL_NAME = os.getenv("LLM_MODEL", "qwen/qwen3-32b")
+MODEL_NAME = os.getenv("LLM_MODEL", "qwen/qwen3.8-27b")
 CHUNK_SIZE = 8000
 
 

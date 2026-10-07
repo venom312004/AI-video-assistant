@@ -8,7 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception
 
-MODEL_NAME = os.getenv("LLM_MODEL", "qwen/qwen3-32b")
+MODEL_NAME = os.getenv("LLM_MODEL", "qwen/qwen3.8-27b")
 CHUNK_CHARS = 12000  # ~3k tokens per chunk, lower this if you still hit 413/429
 
 

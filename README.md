@@ -43,14 +43,14 @@ It's built for anyone who wants to turn a raw meeting recording, podcast, or vid
 |---|---|
 | Frontend | Streamlit |
 | LLM Orchestration | LangChain (LCEL) |
-| LLM Provider | Qwen3 32B (`qwen/qwen3-32b`) via Groq |
+| LLM Provider | Qwen 3.8 27B (`qwen/qwen3.8-27b`) via Groq |
 | Speech-to-Text | OpenAI Whisper, Sarvam AI |
 | Vector Store | ChromaDB (`langchain-chroma`) |
 | Embeddings | HuggingFace Sentence-Transformers (`paraphrase-multilingual-MiniLM-L12-v2`, runs locally) |
 | Audio Processing | `pydub`, `ffmpeg`, `yt-dlp` |
 | Deployment | Streamlit Community Cloud |
 
-> The LLM is configurable. Set `LLM_MODEL` in your environment (for example `llama-3.3-70b-versatile`) to switch models without changing code.
+> The LLM is configurable. Set `LLM_MODEL` in your environment (for example `openai/gpt-oss-120b`) to switch models without changing code. Groq's model list changes often, so check the current list at [console.groq.com/docs/models](https://console.groq.com/docs/models).
 
 ---
 
@@ -86,7 +86,7 @@ GROQ_API_KEY=your_groq_api_key
 SARVAM_API_KEY=your_sarvam_api_key
 
 # optional
-# LLM_MODEL=qwen/qwen3-32b
+# LLM_MODEL=qwen/qwen3.8-27b
 # EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
 ```
 

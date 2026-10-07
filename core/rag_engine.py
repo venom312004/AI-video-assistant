@@ -7,7 +7,7 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda
 from core.vector_store import build_vector_store, load_vector_store, get_retriever
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception
 
-MODEL_NAME = os.getenv("LLM_MODEL", "qwen/qwen3-32b")
+MODEL_NAME = os.getenv("LLM_MODEL", "qwen/qwen3.8-27b")
 
 RAG_SYSTEM_PROMPT = """You are an expert meeting assistant. Answer the user's question
 based ONLY on the meeting transcript context provided below.
