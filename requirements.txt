@@ -15,11 +15,11 @@ torchaudio>=2.2.0                 # Audio utilities for PyTorch
 #  Translation (Hindi → English)
 deep-translator>=1.11.4           # Lightweight translation wrapper (Google backend)
 
-#  LLM Orchestration — LangChain LCEL + Gemini 
+#  LLM Orchestration — LangChain LCEL + Groq (Qwen3)
 langchain>=0.2.0
 langchain-core>=0.2.0
 langchain-community>=0.2.0
-langchain-google-genai>=1.0.0     # LangChain wrapper for Gemini API
+langchain-groq>=0.2.0             # LangChain wrapper for Groq API (Qwen3 / Llama)
 langchain-text-splitters>=1.1.2
 tenacity>=8.2.0                   # Retry logic for LLM API calls
 
@@ -39,6 +39,7 @@ watchdog>=4.0.0                   # File-change watcher (improves Streamlit hot-
 blinker>=1.7.0
 toml>=0.10.2
 itsdangerous>=2.1.0
+markdown>=3.5                     # Render LLM markdown output inside HTML cards
 
 # PDF & TXT Export 
 reportlab>=4.2.0                  # PDF generation

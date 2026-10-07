@@ -8,3 +8,10 @@ downloads/
 vector_db/
 cookies.txt
 cookies_temp.txt
+.streamlit/secrets.toml
+*.mp3
+*.wav
+*.m4a
+*.webm
+*.mp4
+.DS_Store

@@ -1,7 +1,10 @@
 import streamlit as st
 import time
-import os  
-import base64                        
+import os
+import html
+import base64
+import tempfile
+import markdown
 from dotenv import load_dotenv
 from utils.audio_processor import process_input
 from core.transcriber import transcribe_all
@@ -10,7 +13,6 @@ from core.extractor import extract_all
 from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
-
 
 
 def ensure_cookies_file():
@@ -25,6 +27,19 @@ def ensure_cookies_file():
 
 ensure_cookies_file()
 
+
+def fmt(text) -> str:
+    """LLM markdown -> safe HTML for the cards and chat bubbles."""
+    return markdown.markdown(html.escape(str(text)), extensions=["nl2br"])
+
+
+def friendly_error(e: Exception) -> str:
+    msg = str(e).lower()
+    if "429" in msg or "rate limit" in msg or "rate_limit" in msg or "resource_exhausted" in msg:
+        return "⏳ The AI service is rate-limited right now. Please try again in a minute."
+    if "413" in msg or "too large" in msg:
+        return "📄 The input was too large for the AI service. Try a shorter video."
+    return "❌ Something went wrong. Please try again."
 
 
 # ─── Page Config ────────────────────────────────────────────────────────────────
@@ -137,6 +152,13 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Syne', sans-serif !important; color: var(
     gap: 0.5rem;
 }
 .card-content { font-size: 0.875rem; line-height: 1.7; color: var(--text); }
+
+/* rendered markdown inside cards and chat bubbles */
+.card-content p, .chat-bubble p { margin: 0 0 0.5rem 0; }
+.card-content p:last-child, .chat-bubble p:last-child { margin-bottom: 0; }
+.card-content ul, .card-content ol,
+.chat-bubble ul, .chat-bubble ol { margin: 0.25rem 0 0.5rem 0; padding-left: 1.25rem; }
+.card-content li, .chat-bubble li { margin-bottom: 0.3rem; }
 
 .badge {
     display: inline-block;
@@ -298,7 +320,6 @@ with st.sidebar:
     else:
         uploaded_file = st.file_uploader("Upload audio/video file", type=["mp3", "wav", "mp4", "m4a", "webm"])
         if uploaded_file is not None:
-            import tempfile, os
             temp_dir = tempfile.gettempdir()
             temp_path = os.path.join(temp_dir, uploaded_file.name)
             with open(temp_path, "wb") as f:
@@ -392,7 +413,8 @@ if run_btn:
             for k in ["audio", "transcript", "title", "summary", "extract", "rag"]:
                 if st.session_state.pipeline_steps.get(k) == "active":
                     st.session_state.pipeline_steps[k] = "pending"
-            progress_placeholder.error(f"❌ Error: {e}")
+            print("Pipeline error:", repr(e))   # full details stay in the logs
+            progress_placeholder.error(friendly_error(e))
 
 # ── Results ──────────────────────────────────────────────────────────────────────
 if st.session_state.result:
@@ -402,7 +424,7 @@ if st.session_state.result:
     <div class="card">
         <div class="card-title">📌 Session Title</div>
         <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;color:var(--text)">
-            {r['title']}
+            {html.escape(str(r['title']))}
         </div>
     </div>""", unsafe_allow_html=True)
 
@@ -412,12 +434,12 @@ if st.session_state.result:
         st.markdown(f"""
         <div class="card">
             <div class="card-title">📋 Summary</div>
-            <div class="card-content">{r['summary']}</div>
+            <div class="card-content">{fmt(r['summary'])}</div>
         </div>""", unsafe_allow_html=True)
 
     with col2:
         with st.expander("📝 Full Transcript", expanded=False):
-            st.markdown(f'<div class="transcript-box">{r["transcript"]}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="transcript-box">{html.escape(r["transcript"])}</div>', unsafe_allow_html=True)
 
     c1, c2, c3 = st.columns(3, gap="medium")
 
@@ -425,21 +447,21 @@ if st.session_state.result:
         st.markdown(f"""
         <div class="card">
             <div class="card-title">✅ Action Items</div>
-            <div class="card-content">{r['action_items']}</div>
+            <div class="card-content">{fmt(r['action_items'])}</div>
         </div>""", unsafe_allow_html=True)
 
     with c2:
         st.markdown(f"""
         <div class="card">
             <div class="card-title">🔑 Key Decisions</div>
-            <div class="card-content">{r['key_decisions']}</div>
+            <div class="card-content">{fmt(r['key_decisions'])}</div>
         </div>""", unsafe_allow_html=True)
 
     with c3:
         st.markdown(f"""
         <div class="card">
             <div class="card-title">❓ Open Questions</div>
-            <div class="card-content">{r['open_questions']}</div>
+            <div class="card-content">{fmt(r['open_questions'])}</div>
         </div>""", unsafe_allow_html=True)
 
     st.markdown("---")
@@ -453,13 +475,13 @@ if st.session_state.result:
                 chat_html += f"""
                 <div class="chat-msg" style="align-items:flex-end">
                     <span class="chat-label user-label">You</span>
-                    <div class="chat-bubble user-bubble">{msg['content']}</div>
+                    <div class="chat-bubble user-bubble">{fmt(msg['content'])}</div>
                 </div>"""
             else:
                 chat_html += f"""
                 <div class="chat-msg" style="align-items:flex-start">
                     <span class="chat-label bot-label">🤖 Assistant</span>
-                    <div class="chat-bubble bot-bubble">{msg['content']}</div>
+                    <div class="chat-bubble bot-bubble">{fmt(msg['content'])}</div>
                 </div>"""
         chat_html += '</div>'
         st.markdown(chat_html, unsafe_allow_html=True)
@@ -478,7 +500,11 @@ if st.session_state.result:
 
     if send_btn and user_input.strip():
         with st.spinner("Thinking…"):
-            answer = ask_question(r["rag_chain"], user_input.strip())
+            try:
+                answer = ask_question(r["rag_chain"], user_input.strip())
+            except Exception as e:
+                print("Chat error:", repr(e))
+                answer = friendly_error(e)
         st.session_state.chat_history.append({"role": "user",      "content": user_input.strip()})
         st.session_state.chat_history.append({"role": "assistant", "content": answer})
         st.rerun()
